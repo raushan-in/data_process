@@ -22,7 +22,9 @@ jobs:
       DB_USER: user
       DB_PASSWORD: password
       DB_NAME: geolocation
-      DB_HOST: geo-pg-db
+      DB_HOST: localhost
+      DB_PORT: 5432
+      CHUNK_SIZE: 10000
       DATABASE_URL: postgresql://user:password@localhost:5432/geolocation
     steps:
       - uses: actions/checkout@v3
