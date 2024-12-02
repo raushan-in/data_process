@@ -1,6 +1,4 @@
 from http import HTTPStatus
-from typing import Dict
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
