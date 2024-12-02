@@ -10,9 +10,9 @@ from app.config import DATABASE_URL, logger
 Base = declarative_base()
 
 # Database connection with retry logic
-max_retries = 10
-retry_delay = 5
-for attempt in range(1, max_retries + 1):
+MAX_RETRIES = 5
+RETRY_DELAY = 5
+for attempt in range(1, MAX_RETRIES + 1):
     try:
         engine = create_engine(DATABASE_URL)
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -20,9 +20,12 @@ for attempt in range(1, max_retries + 1):
         break
     except Exception as e:
         logger.error(
-            f"Attempt {attempt}: Database connection failed. Retrying in {retry_delay} seconds..."
+            "Attempt %s: Database connection failed. Retrying in %s seconds...",
+            attempt,
+            RETRY_DELAY,
         )
-        sleep(retry_delay)
+
+        sleep(RETRY_DELAY)
 else:
     raise ConnectionError("Failed to connect to the database after multiple retries.")
 
