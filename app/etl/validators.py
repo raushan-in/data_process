@@ -1,7 +1,16 @@
 from typing import Optional
+
 import pandas as pd
 
-from app.constants import *
+from app.constants import (
+    COLUMN_CITY,
+    COLUMN_COUNTRY,
+    COLUMN_COUNTRY_CODE,
+    COLUMN_IP_ADDRESS,
+    COLUMN_LATITUDE,
+    COLUMN_LONGITUDE,
+    COLUMN_MYSTERY_VALUE,
+)
 
 
 def validate_geolocation_row(row: pd.Series) -> Optional[dict]:
