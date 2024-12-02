@@ -28,7 +28,7 @@ def validate_geolocation_row(row: pd.Series) -> Optional[dict]:
     Returns:
         Optional[dict]: A dictionary containing the cleaned and transformed row data if validation succeeds.
         The dictionary has the following structure:
-            - `ip_address` (str): The IP address.
+            - `ip_address` (str): Either IPv4 or IPv6 IP addresses.
             - `country_code` (str): The country code.
             - `country` (Optional[str]): The country name, or `None` if missing.
             - `city` (Optional[str]): The city name, or `None` if missing or empty.
