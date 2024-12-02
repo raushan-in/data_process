@@ -49,8 +49,17 @@ def load_data(
     for i, chunk in enumerate(chunk_iter, start=1):
         logger.info("Processing chunk #%d", i)
 
+        # Null values checks in required columns
+        null_filtered_count = (
+            chunk["ip_address"].isna().sum() + chunk["country_code"].isna().sum()
+        )
         chunk = chunk.dropna(subset=["ip_address", "country_code"])
+        stats["discarded"] += null_filtered_count
+
+        # Duplicate checks on `ip_address`
+        duplicate_filtered_count = chunk.duplicated(subset=["ip_address"]).sum()
         chunk = chunk.drop_duplicates(subset=["ip_address"])
+        stats["discarded"] += duplicate_filtered_count
 
         records_to_insert = []
         for _, row in chunk.iterrows():

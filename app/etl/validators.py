@@ -1,4 +1,5 @@
 from typing import Optional
+import ipaddress
 
 import pandas as pd
 
@@ -52,7 +53,7 @@ def validate_geolocation_row(row: pd.Series) -> Optional[dict]:
 
     try:
         return {
-            "ip_address": row[COLUMN_IP_ADDRESS].strip(),
+            "ip_address": str(ipaddress.ip_address(row[COLUMN_IP_ADDRESS].strip())),
             "country_code": row[COLUMN_COUNTRY_CODE].strip(),
             "country": row.get(COLUMN_COUNTRY, "").strip(),
             "city": row.get(COLUMN_CITY, "").strip() or None,

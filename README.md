@@ -30,6 +30,12 @@ geo_service/
 │   └── data_dump.csv          # Given CSV file with geolocation data
 │   ├── validators.py          # Validation logic for data sanitization
 │   ├── pipeeline.py           # initiate the etl process
+├── tests/
+│   ├── __init__.py
+│   ├── test_data/             # Sample data for testing
+│   ├── test_etl.py            # unit test for etl services like data loading
+│   ├── test_database.py       # unit test for database
+│   ├── test_api.py            # unit test for api
 ├── .env                       # Environment variables for configuration
 ├── Dockerfile                 # Dockerfile to containerize the application
 ├── docker-compose.yml         # Compose file to run app and PostgreSQL together
@@ -49,26 +55,21 @@ geo_service/
 
 1. Build and start the application:
    ```bash
-   docker compose up --build
+   docker compose up -d
    ```
 
 2. Access the application:
-   - API: `http://localhost:8000`
    - Swagger API Docs: `http://localhost:8000/docs`
 
 ---
 
 ## Importing Data
 
-To import data from a CSV file into the PostgreSQL database:
+To import data from a CSV file into the database:
 
-1. List containers:
+1. Trigger ETL process from container shell:
    ```bash
-   docker ps
-   ```
-2. Access the container shell:
-   ```bash
-   docker exec <container_id of geo-web-app> python app/etl/pipeline.py
+   docker exec geo-web-app python app/etl/pipeline.py
    ```
 
 ---
@@ -94,6 +95,22 @@ To import data from a CSV file into the PostgreSQL database:
 
 ---
 
+## Testing
+
+To run unit tests:
+
+1. Access to container shell:
+   ```bash
+   docker exec -it geo-web-app bash
+   ```
+
+1. Run unit tests with code coverage report:
+   ```bash
+   pytest --disable-warnings --cov=app tests/
+   ```
+
+---
+
 ## Design Choices
 
 1. **PostgreSQL**: Chosen for scalability and production-readiness.
@@ -110,6 +127,7 @@ To import data from a CSV file into the PostgreSQL database:
 
 
 ## Scope Of Improvements
+- Valid country code checks.
 - Temporarily drop indexes, then recreate them after the load.
 - Add caching (e.g., Redis) for frequent queries.
 - Use multithreading for concurrent chunk processing.
