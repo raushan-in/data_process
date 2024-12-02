@@ -22,6 +22,7 @@ jobs:
       DB_USER: user
       DB_PASSWORD: password
       DB_NAME: geolocation
+      DB_HOST: geo-pg-db
       DATABASE_URL: postgresql://user:password@localhost:5432/geolocation
     steps:
       - uses: actions/checkout@v3
