@@ -1,0 +1,34 @@
+services:
+  geo-web:
+      build: .
+      image: geo-web-app:latest
+      ports:
+        - "${WEB_PORT}:8000"
+      env_file:
+        - .env
+      environment:
+        - PYTHONPATH=/app
+      depends_on:
+        - geo-pg-db
+      networks:
+        - geo_network
+
+  geo-pg-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - geo_pg_data:/var/lib/postgresql/data
+    networks:
+      - geo_network
+
+volumes:
+  geo_pg_data:
+
+networks:
+  geo_network:
+    name: geo_web_app_network
