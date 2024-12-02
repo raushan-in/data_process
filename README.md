@@ -99,14 +99,9 @@ To import data from a CSV file into the database:
 
 To run unit tests:
 
-1. Access to container shell:
-   ```bash
-   docker exec -it geo-web-app bash
-   ```
-
 1. Run unit tests with code coverage report:
    ```bash
-   pytest --disable-warnings --cov=app tests/
+   docker exec -it geo-web-app pytest --disable-warnings --cov=app tests/
    ```
 
 ---
