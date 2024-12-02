@@ -80,10 +80,10 @@ def start():
     - Load data into app database
     - Print pipeline statistics
     """
-    SAMPLE_FILE_PATH = "app/etl/data/data_dump.csv"
+    sample_file_path = "app/etl/data/data_dump.csv"  # To read given sample data
     db_session = next(get_db())
     stats = load_data(
-        file_path=SAMPLE_FILE_PATH, db_session=db_session, chunk_size=CHUNK_SIZE
+        file_path=sample_file_path, db_session=db_session, chunk_size=CHUNK_SIZE
     )
     logger.info(
         "CSV import completed. \n Accepted: %d, Discarded: %d, Time elapsed: %.2f seconds",

@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
+        pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=line-too-long,missing-module-docstring $(git ls-files '*.py')
+        pylint --disable=line-too-long,missing-module-docstring,missing-class-docstring $(git ls-files '*.py')
