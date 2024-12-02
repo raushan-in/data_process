@@ -11,7 +11,7 @@ class TestAPI(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(app)
 
-    @patch("app.routes.get_db")
+    @patch("app.database.get_db")
     def test_geolocation_api_success(self, mock_get_db):
         """
         Test the geolocation lookup endpoint for a valid IP address.
@@ -33,7 +33,7 @@ class TestAPI(unittest.TestCase):
         # success api call
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    @patch("app.routes.get_db")
+    @patch("app.database.get_db")
     def test_geolocation_api_data_missing(self, mock_get_db):
         """
         Test the geolocation lookup endpoint for an IP address that does not exist in the database.
