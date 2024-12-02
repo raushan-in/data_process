@@ -49,8 +49,17 @@ def load_data(
     for i, chunk in enumerate(chunk_iter, start=1):
         logger.info("Processing chunk #%d", i)
 
+        # Null values checks in required columns
+        null_filtered_count = (
+            chunk["ip_address"].isna().sum() + chunk["country_code"].isna().sum()
+        )
         chunk = chunk.dropna(subset=["ip_address", "country_code"])
+        stats["discarded"] += null_filtered_count
+
+        # Duplicate checks on `ip_address`
+        duplicate_filtered_count = chunk.duplicated(subset=["ip_address"]).sum()
         chunk = chunk.drop_duplicates(subset=["ip_address"])
+        stats["discarded"] += duplicate_filtered_count
 
         records_to_insert = []
         for _, row in chunk.iterrows():
@@ -80,10 +89,10 @@ def start():
     - Load data into app database
     - Print pipeline statistics
     """
-    SAMPLE_FILE_PATH = "app/etl/data/data_dump.csv"
+    sample_file_path = "app/etl/data/data_dump.csv"  # To read given sample data
     db_session = next(get_db())
     stats = load_data(
-        file_path=SAMPLE_FILE_PATH, db_session=db_session, chunk_size=CHUNK_SIZE
+        file_path=sample_file_path, db_session=db_session, chunk_size=CHUNK_SIZE
     )
     logger.info(
         "CSV import completed. \n Accepted: %d, Discarded: %d, Time elapsed: %.2f seconds",

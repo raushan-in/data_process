@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class GeolocationResponse(BaseModel):
+    """Data model for geolocation response"""
+
     ip_address: str
     country_code: str
     country: Optional[str] = None

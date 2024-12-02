@@ -2,6 +2,7 @@ services:
   geo-web:
       build: .
       image: geo-web-app:latest
+      container_name: geo-web-app
       ports:
         - "${WEB_PORT}:8000"
       env_file:

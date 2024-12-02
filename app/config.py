@@ -23,4 +23,3 @@ logging.basicConfig(
 
 logger = logging.getLogger("geo_service")
 logger.info("App Configured Successfully!")
-
