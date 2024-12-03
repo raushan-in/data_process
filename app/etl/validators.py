@@ -57,9 +57,34 @@ def validate_geolocation_row(row: pd.Series) -> Optional[dict]:
             "country_code": row[COLUMN_COUNTRY_CODE].strip(),
             "country": row.get(COLUMN_COUNTRY, "").strip(),
             "city": row.get(COLUMN_CITY, "").strip() or None,
-            "latitude": pd.to_numeric(row[COLUMN_LATITUDE], errors="coerce"),
-            "longitude": pd.to_numeric(row[COLUMN_LONGITUDE], errors="coerce"),
+            "latitude": (
+                float(row[COLUMN_LATITUDE])
+                if is_valid_float(row[COLUMN_LATITUDE])
+                else None
+            ),
+            "longitude": (
+                float(row[COLUMN_LONGITUDE])
+                if is_valid_float(row[COLUMN_LONGITUDE])
+                else None
+            ),
             "extra_data": row[COLUMN_MYSTERY_VALUE],
         }
     except (ValueError, AttributeError):
         return None
+
+
+def is_valid_float(value) -> bool:
+    """
+    Checks if a value can be safely converted to a float.
+
+    Args:
+        value: The value to check.
+
+    Returns:
+        bool: True if the value is a valid float, False otherwise.
+    """
+    try:
+        float(value)
+        return True
+    except (ValueError, TypeError):
+        return False
