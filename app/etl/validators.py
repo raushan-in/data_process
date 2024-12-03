@@ -57,16 +57,8 @@ def validate_geolocation_row(row: pd.Series) -> Optional[dict]:
             "country_code": row[COLUMN_COUNTRY_CODE].strip(),
             "country": row.get(COLUMN_COUNTRY, "").strip(),
             "city": row.get(COLUMN_CITY, "").strip() or None,
-            "latitude": (
-                float(row[COLUMN_LATITUDE])
-                if pd.notnull(row[COLUMN_LATITUDE])
-                else None
-            ),
-            "longitude": (
-                float(row[COLUMN_LONGITUDE])
-                if pd.notnull(row[COLUMN_LONGITUDE])
-                else None
-            ),
+            "latitude": pd.to_numeric(row[COLUMN_LATITUDE], errors="coerce"),
+            "longitude": pd.to_numeric(row[COLUMN_LONGITUDE], errors="coerce"),
             "extra_data": row[COLUMN_MYSTERY_VALUE],
         }
     except (ValueError, AttributeError):
