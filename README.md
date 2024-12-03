@@ -95,6 +95,12 @@ To import data from a CSV file into the database:
 
 ---
 
+## DataBase UI
+
+1. pgadmin : `http://localhost:5050`
+
+---
+
 ## Testing
 
 To run unit tests:
@@ -122,7 +128,6 @@ To run unit tests:
 
 
 ## Scope Of Improvements
-- Valid country code checks.
 - Temporarily drop indexes, then recreate them after the load.
 - Add caching (e.g., Redis) for frequent queries.
 - Use multithreading for concurrent chunk processing.
