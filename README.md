@@ -23,7 +23,6 @@ geo_service/
 │   ├── constants.py           # Constants for CSV column names
 │   ├── database.py            # Database setup and connection logic
 │   ├── models.py              # Database schema for geolocation records
-│   ├── services.py            # Business logic for CSV import
 │   ├── main.py                # FastAPI app initialization
 │   ├── routes.py              # API routes definition
 ├── etl/
@@ -129,6 +128,6 @@ To run unit tests:
 
 ## Scope Of Improvements
 - Temporarily drop indexes, then recreate them after the load.
-- Add caching (e.g., Redis) for frequent queries.
+- Add caching (e.g., lru or Redis) for frequent queries.
 - Use multithreading for concurrent chunk processing.
 - Distributed processing tool like pySpark for really large dataset.

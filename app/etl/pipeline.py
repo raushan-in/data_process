@@ -34,8 +34,7 @@ def load_data(
 
     Notes:
         - The CSV file should have the following columns:
-          `ip_address`, `country_code`, `country`, `city`, `latitude`, `longitude`.
-        - Records with null or duplicate `ip_address` values are automatically handled by the database.
+          `ip_address`, `country_code`, `country`, `city`, `latitude`, `longitude`, `mystery_value`.
         - Validation is performed using the `validate_geolocation_row` function.
     """
 
