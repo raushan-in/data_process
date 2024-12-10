@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import insert
 
 from app.config import CHUNK_SIZE, logger
 from app.database import get_db
-from app.etl.validators import validate_geolocation_row
+from app.etl.validators import validate_chunk
 from app.models import GeolocationRecord
 
 
@@ -39,44 +39,28 @@ def load_data(
     """
 
     stats = {"accepted": 0, "discarded": 0}
-    start_time = time.time()
 
     logger.info("Starting CSV import from %s", file_path)
 
     chunk_iter = pd.read_csv(file_path, chunksize=chunk_size)
 
     for i, chunk in enumerate(chunk_iter, start=1):
-        logger.info("Processing chunk #%d", i)
+        print(f"Processing chunk #{i}...")
 
-        # Null values checks in required columns
-        null_filtered_count = (
-            chunk["ip_address"].isna().sum() + chunk["country_code"].isna().sum()
-        )
-        chunk = chunk.dropna(subset=["ip_address", "country_code"])
-        stats["discarded"] += null_filtered_count
+        # Validate and transform the chunk
+        valid_chunk, discarded_count = validate_chunk(chunk)
+        stats["discarded"] += discarded_count
 
-        # Duplicate checks on `ip_address`
-        duplicate_filtered_count = chunk.duplicated(subset=["ip_address"]).sum()
-        chunk = chunk.drop_duplicates(subset=["ip_address"])
-        stats["discarded"] += duplicate_filtered_count
-
-        records_to_insert = []
-        for _, row in chunk.iterrows():
-            sanitized = validate_geolocation_row(row)
-            if sanitized:
-                records_to_insert.append(sanitized)
-                stats["accepted"] += 1
-            else:
-                stats["discarded"] += 1
-
-        if records_to_insert:
+        if not valid_chunk.empty:
+            # Insert valid rows into the database
+            records_to_insert = valid_chunk.to_dict(orient="records")
             stmt = insert(GeolocationRecord).values(records_to_insert)
             stmt = stmt.on_conflict_do_nothing(index_elements=["ip_address"])
             db_session.execute(stmt)
             db_session.commit()
-            logger.info("Inserted %d records from chunk #%d", len(records_to_insert), i)
 
-    stats["time_elapsed"] = time.time() - start_time
+            stats["accepted"] += len(records_to_insert)
+    
     return stats
 
 
